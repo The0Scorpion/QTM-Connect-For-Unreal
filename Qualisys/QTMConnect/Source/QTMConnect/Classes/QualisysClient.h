@@ -102,7 +102,9 @@ public:
     //Scorpion Edits
     UFUNCTION(BlueprintCallable, Category = "Qualisys")
     bool GetAnalogValueIndex(int channelIndex, float& Value);
-
+    
+    UFUNCTION(BlueprintCallable, Category = "Qualisys")
+    bool GetChannelCount(int& ChannelCount);
 protected:
     virtual void PreInitializeComponents() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -123,4 +125,5 @@ private:
     TMap<FString, FQualisysTrajectoryInfo> mTrajectories;
     TMap<FString, FQualisysRigidBodyInfo> mRigidBodies;
     TMap<int, float> analogdata;
+    int chancount=0;
 };

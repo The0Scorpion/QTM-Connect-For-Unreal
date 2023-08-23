@@ -141,7 +141,7 @@ void SQTMConnectLiveLinkSourceEditor::Construct(const FArguments& Args)
                 .FillWidth(0.5f)
                 [
                     SAssignNew(StreamAnalogCB, SCheckBox)
-                    .IsChecked(ECheckBoxState::Unchecked)
+                    .IsChecked(ECheckBoxState::Checked)
                 ]
             ] 
             + SVerticalBox::Slot()
@@ -161,7 +161,7 @@ void SQTMConnectLiveLinkSourceEditor::Construct(const FArguments& Args)
                 .FillWidth(0.5f)
                 [
                     SAssignNew(StreamAnalogSingleCB, SCheckBox)
-                    .IsChecked(ECheckBoxState::Unchecked)
+                    .IsChecked(ECheckBoxState::Checked)
                 ]
             ] 
             + SVerticalBox::Slot()

@@ -327,13 +327,15 @@ void AQualisysClient::HandleQtmData(CRTPacket * rtPacket)
             }
         }
         const auto analogCount = rtPacket->GetAnalogSingleDeviceCount();
+        chancount=0;
          for (unsigned int bodyIndex = 0; bodyIndex < analogCount; bodyIndex++)
         {
             const auto chCount = rtPacket->GetAnalogSingleChannelCount(bodyIndex);
             for (unsigned int chIndex = 0; chIndex < chCount; chIndex++){
                 float val;
                 rtPacket->GetAnalogSingleData(bodyIndex,chIndex,val);
-                analogdata.Emplace(chIndex, val);
+                analogdata.Emplace(chIndex+(chCount*bodyIndex), val);
+                chancount+=1;
             }
         }
         mUpdateLock.Unlock();
@@ -399,6 +401,11 @@ bool AQualisysClient::GetAnalogValueIndex(int channelIndex, float& Value)
     return true;
     }
     return false;
+}
+bool AQualisysClient::GetChannelCount(int& ChannelCount)
+{   
+    ChannelCount=chancount;
+    return true;
 }
 #pragma optimize("", on)
 

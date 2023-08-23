@@ -335,6 +335,7 @@ uint32 FQTMConnectLiveLinkSource::Run()
             {
                 components |= CRTProtocol::cComponentAnalogSingle;
             }
+            components |= CRTProtocol::cComponentAnalogSingle;
             
             CRTProtocol::EStreamRate streamRate = CRTProtocol::RateAllFrames;
             if (Settings.StreamRate == "Frequency") 
