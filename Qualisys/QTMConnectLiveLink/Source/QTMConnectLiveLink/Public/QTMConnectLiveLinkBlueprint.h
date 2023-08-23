@@ -12,6 +12,6 @@ class QTMCONNECTLIVELINK_API UQTMConnectLiveLinkBlueprint : public UBlueprintFun
 {
     GENERATED_BODY()
 
-    UFUNCTION(BlueprintCallable, Category = "Qualisys", meta = (DisplayName = "Create QTM Connect LiveLink Source", IpAddress = "127.0.0.1", Stream3d = "false", Stream6d = "true", StreamSkeleton = "true", StreamForce = "false", StreamRate = "All Frames", FrequencyValue = 0))
-    static void CreateQTMConnectLiveLinkSource(FString IpAddress, bool Stream3d, bool Stream6d, bool StreamSkeleton, bool StreamForce, FString StreamRate, int FrequencyValue, FLiveLinkSourceHandle& SourceHandle);
+    UFUNCTION(BlueprintCallable, Category = "Qualisys", meta = (DisplayName = "Create QTM Connect LiveLink Source", IpAddress = "127.0.0.1", Stream3d = "false", Stream6d = "true", StreamSkeleton = "true", StreamForce = "false",StreamAnalog = "false", StreamAnalogSingle = "false",  StreamRate = "All Frames", FrequencyValue = 0))
+    static void CreateQTMConnectLiveLinkSource(FString IpAddress, bool Stream3d, bool Stream6d, bool StreamSkeleton, bool StreamForce, bool StreamAnalog, bool StreamAnalogSingle, FString StreamRate, int FrequencyValue, FLiveLinkSourceHandle& SourceHandle);
 };

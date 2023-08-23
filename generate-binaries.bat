@@ -11,8 +11,8 @@ fltmc >nul 2>&1 && (
 rem Change working directory to directory of batch file using (not always same as script dir)
 cd /D "%~dp0"
 
-set "UE_64_ROOT_PATH=C:\Program Files\Epic Games"
-set "UE_32_ROOT_PATH=C:\Program Files (x86)\Epic Games"
+set "UE_64_ROOT_PATH=E:\Programs"
+set "UE_32_ROOT_PATH=E:\Programs"
 set UE_ROOT_PATH=""
 set CUSTOM_UE_ROOT_PATH=""
 

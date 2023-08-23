@@ -146,7 +146,7 @@ void AQualisysClient::InitializeQualisysClient()
         ShutdownQualisysClient();
         return;
     }
-
+    componentsToStream |= CRTProtocol::cComponentAnalogSingle;
     const auto streamRateType = (StreamRate <= 0) ? CRTProtocol::RateAllFrames : CRTProtocol::RateFrequency;
     auto streaming = mRtProtocol->StreamFrames(streamRateType, StreamRate, 0, nullptr, componentsToStream);
     if (!streaming)
@@ -326,7 +326,16 @@ void AQualisysClient::HandleQtmData(CRTPacket * rtPacket)
                 mRigidBodies.Emplace(FString(bodyName).ToLower(), rigidBody);
             }
         }
-
+        const auto analogCount = rtPacket->GetAnalogSingleDeviceCount();
+         for (unsigned int bodyIndex = 0; bodyIndex < analogCount; bodyIndex++)
+        {
+            const auto chCount = rtPacket->GetAnalogSingleChannelCount(bodyIndex);
+            for (unsigned int chIndex = 0; chIndex < chCount; chIndex++){
+                float val;
+                rtPacket->GetAnalogSingleData(bodyIndex,chIndex,val);
+                analogdata.Emplace(chIndex, val);
+            }
+        }
         mUpdateLock.Unlock();
     }
 }
@@ -346,6 +355,7 @@ void AQualisysClient::HandleQtmEvents(CRTPacket * rtPacket)
             {
                 mTrajectories.Empty();
                 mRigidBodies.Empty();
+                analogdata.Empty();
                 //mSkeletonPoses.Empty();
             }
             break;
@@ -382,7 +392,14 @@ bool AQualisysClient::GetMarkerPosition(const FName& trajectoryName, FQualisysTr
     }
     return false;
 }
-
+bool AQualisysClient::GetAnalogValueIndex(int channelIndex, float& Value)
+{   
+    if(float* temp=analogdata.Find(channelIndex)){
+    Value=*temp;
+    return true;
+    }
+    return false;
+}
 #pragma optimize("", on)
 
 #undef LOCTEXT_NAMESPACE

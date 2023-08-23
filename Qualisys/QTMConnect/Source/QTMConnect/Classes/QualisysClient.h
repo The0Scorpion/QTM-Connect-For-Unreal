@@ -99,6 +99,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Qualisys")
     static AQualisysClient* FindQualisysClient(UWorld* World);
 
+    //Scorpion Edits
+    UFUNCTION(BlueprintCallable, Category = "Qualisys")
+    bool GetAnalogValueIndex(int channelIndex, float& Value);
+
 protected:
     virtual void PreInitializeComponents() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -118,4 +122,5 @@ private:
     FCriticalSection mUpdateLock;
     TMap<FString, FQualisysTrajectoryInfo> mTrajectories;
     TMap<FString, FQualisysRigidBodyInfo> mRigidBodies;
+    TMap<int, float> analogdata;
 };

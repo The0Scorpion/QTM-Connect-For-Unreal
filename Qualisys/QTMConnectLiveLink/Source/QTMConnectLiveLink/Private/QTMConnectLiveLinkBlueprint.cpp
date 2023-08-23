@@ -6,7 +6,7 @@
 #include "Features/IModularFeatures.h"
 #include "QTMConnectLiveLinkSource.h"
 
-void UQTMConnectLiveLinkBlueprint::CreateQTMConnectLiveLinkSource(FString IpAddress, bool Stream3d, bool Stream6d, bool StreamSkeleton, bool StreamForce, FString StreamRate, int FrequencyValue, FLiveLinkSourceHandle& SourceHandle)
+void UQTMConnectLiveLinkBlueprint::CreateQTMConnectLiveLinkSource(FString IpAddress, bool Stream3d, bool Stream6d, bool StreamSkeleton, bool StreamForce, bool StreamAnalog, bool StreamAnalogSingle, FString StreamRate, int FrequencyValue, FLiveLinkSourceHandle& SourceHandle)
 {
     IModularFeatures& ModularFeatures = IModularFeatures::Get();
 
@@ -21,6 +21,8 @@ void UQTMConnectLiveLinkBlueprint::CreateQTMConnectLiveLinkSource(FString IpAddr
         settings.Stream6d = Stream6d;
         settings.StreamSkeleton = StreamSkeleton;
         settings.StreamForce = StreamForce;
+        settings.StreamAnalog = StreamAnalog;
+        settings.StreamAnalogSingle = StreamAnalogSingle;
         settings.StreamRate = StreamRate;
         settings.FrequencyValue = FrequencyValue;
 

@@ -66,6 +66,18 @@ QTMConnectLiveLinkSettings QTMConnectLiveLinkSettings::FromString(const FString&
     {
         settings.StreamForce = streamForce == "true";
     }
+    settings.StreamAnalog = false;
+    FString streamAnalog;
+    if (FParse::Value(*settingsString, TEXT("StreamAnalog="), streamAnalog))
+    {
+        settings.StreamAnalog = streamAnalog == "true";
+    }
+    settings.StreamAnalogSingle = false;
+    FString streamAnalogSingle;
+    if (FParse::Value(*settingsString, TEXT("StreamAnalogSingle="), streamAnalogSingle))
+    {
+        settings.StreamAnalogSingle = streamAnalogSingle == "true";
+    }
     settings.StreamRate = "All Frames";
     FString streamRate;
     if (FParse::Value(*settingsString, TEXT("StreamRate="), streamRate))
@@ -88,6 +100,8 @@ FString QTMConnectLiveLinkSettings::ToString() const
     settingsString.Append(FString::Printf(TEXT("Stream6d=\"%s\""), Stream6d ? TEXT("true") : TEXT("false")));
     settingsString.Append(FString::Printf(TEXT("StreamSkeleton=\"%s\""), StreamSkeleton ? TEXT("true") : TEXT("false")));
     settingsString.Append(FString::Printf(TEXT("StreamForce=\"%s\""), StreamForce ? TEXT("true") : TEXT("false")));
+    settingsString.Append(FString::Printf(TEXT("StreamAnalog=\"%s\""), StreamAnalog ? TEXT("true") : TEXT("false")));
+    settingsString.Append(FString::Printf(TEXT("StreamAnalogSingle=\"%s\""), StreamAnalogSingle ? TEXT("true") : TEXT("false")));
     settingsString.Append(FString::Printf(TEXT("StreamRate=\"%s\""), *StreamRate));
     settingsString.Append(FString::Printf(TEXT("FrequencyValue=\"%d\""), FrequencyValue));
     return settingsString;
@@ -312,6 +326,14 @@ uint32 FQTMConnectLiveLinkSource::Run()
             if (Settings.StreamForce)
             {
                 components |= CRTProtocol::cComponentForceSingle;
+            }
+            if (Settings.StreamAnalog)
+            {
+                components |= CRTProtocol::cComponentAnalog;
+            }
+            if (Settings.StreamAnalogSingle)
+            {
+                components |= CRTProtocol::cComponentAnalogSingle;
             }
             
             CRTProtocol::EStreamRate streamRate = CRTProtocol::RateAllFrames;
@@ -589,6 +611,56 @@ uint32 FQTMConnectLiveLinkSource::Run()
                     Client->PushSubjectFrameData_AnyThread({ SourceGuid, forceName }, MoveTemp(frameDataStruct));
                 }
             }
+            {
+
+                const auto analogDeviceCount = packet->GetAnalogDeviceCount();
+
+                float value[150];
+                for (auto analogDeviceIndex = 0u; analogDeviceIndex < analogDeviceCount; analogDeviceIndex++)
+                {
+                    const auto devName = FName(mDeviceIdToName[analogDeviceIndex]);
+
+                    FLiveLinkFrameDataStruct frameDataStruct = FLiveLinkFrameDataStruct(FLiveLinkBaseFrameData::StaticStruct());
+                    FLiveLinkBaseFrameData& subjectFrame = *frameDataStruct.Cast<FLiveLinkBaseFrameData>();
+                    const auto analogSampleCount = packet->GetAnalogSampleCount(analogDeviceIndex);
+                    for (auto i = 1; i < 49; i++)
+                        {
+                        if (packet->GetAnalogData(analogDeviceIndex, i-1, value, 150))
+                        {
+                        subjectFrame.PropertyValues.Add(value[0]);
+                        }
+                    }
+
+                    subjectFrame.WorldTime = worldTime;
+                    subjectFrame.MetaData.SceneTime = sceneTime;
+
+                    Client->PushSubjectFrameData_AnyThread({ SourceGuid, devName}, MoveTemp(frameDataStruct));
+                }
+            }
+            {
+
+                const auto analogDeviceCount = packet->GetAnalogSingleDeviceCount();
+
+                float value;
+                for (auto analogDeviceIndex = 0u; analogDeviceIndex < analogDeviceCount; analogDeviceIndex++)
+                {
+                    const auto devName = FName(mDeviceIdToName[analogDeviceIndex]);
+
+                    FLiveLinkFrameDataStruct frameDataStruct = FLiveLinkFrameDataStruct(FLiveLinkBaseFrameData::StaticStruct());
+                    FLiveLinkBaseFrameData& subjectFrame = *frameDataStruct.Cast<FLiveLinkBaseFrameData>();
+                        for (auto i = 1; i < 49; i++)
+                        {
+                            if (packet->GetAnalogSingleData(analogDeviceIndex, i-1, value))
+                            {
+                            subjectFrame.PropertyValues.Add(value);
+                            }
+                    }
+                    subjectFrame.WorldTime = worldTime;
+                    subjectFrame.MetaData.SceneTime = sceneTime;
+
+                    Client->PushSubjectFrameData_AnyThread({ SourceGuid, devName }, MoveTemp(frameDataStruct));
+                }
+            }
         }
     }
 
@@ -695,6 +767,44 @@ void FQTMConnectLiveLinkSource::CreateLiveLinkSubjects()
             EncounteredSubjects.Add({ SourceGuid, name });
         }
     }
+     if (Settings.StreamAnalog)
+    {
+        const auto analogDeviceCount = mRTProtocol->GetAnalogDeviceCount();
+
+        for (unsigned int analogDeviceIndex = 0; analogDeviceIndex < analogDeviceCount; analogDeviceIndex++)
+        {
+            std::string nn= std::string("AnalogDev").append(std::to_string(analogDeviceIndex));
+            FString pName(nn.c_str());
+            mDeviceIdToName[analogDeviceIndex] = pName;
+            const auto name = FName(pName);
+            FLiveLinkStaticDataStruct subjectDataStruct = FLiveLinkStaticDataStruct(FLiveLinkBaseStaticData::StaticStruct());
+            for(int i=1;i<49;i++){
+            std::string nnn=std::string("Ch").append(std::to_string(analogDeviceIndex)).append(std::to_string(i));
+            subjectDataStruct.GetBaseData()->PropertyNames.Add(FName(FString(nnn.c_str())));
+            }
+            Client->PushSubjectStaticData_AnyThread({ SourceGuid, name }, ULiveLinkBasicRole::StaticClass(), MoveTemp(subjectDataStruct));
+            EncounteredSubjects.Add({ SourceGuid, name });
+        }
+    }
+    if (Settings.StreamAnalogSingle)
+    {
+        unsigned int analogDeviceCount = mRTProtocol->GetAnalogDeviceCount();
+
+        for (unsigned int analogDeviceIndex = 0; analogDeviceIndex < analogDeviceCount; analogDeviceIndex++)
+        {
+            std::string nn=std::string("AnalogSingleDev").append(std::to_string(analogDeviceIndex));
+            FString pName(nn.c_str());
+            mDeviceIdToName[analogDeviceIndex] = pName;
+            const auto name = FName(pName);
+            FLiveLinkStaticDataStruct subjectDataStruct = FLiveLinkStaticDataStruct(FLiveLinkBaseStaticData::StaticStruct());
+            for(int i=1;i<49;i++){
+            std::string nnn=std::string("ChSingle").append(std::to_string(analogDeviceIndex)).append(std::to_string(i));
+            subjectDataStruct.GetBaseData()->PropertyNames.Add(FName(FString(nnn.c_str())));
+            }
+            Client->PushSubjectStaticData_AnyThread({ SourceGuid, name }, ULiveLinkBasicRole::StaticClass(), MoveTemp(subjectDataStruct));
+            EncounteredSubjects.Add({ SourceGuid, name });
+        }
+    }
 }
 
 void FQTMConnectLiveLinkSource::ClearSubjects()
@@ -708,6 +818,7 @@ void FQTMConnectLiveLinkSource::ClearSubjects()
     }
     EncounteredSubjects.Empty();
     mForceIdToName.clear();
+    mDeviceIdToName.clear();
 }
 
 #pragma optimize("", on)

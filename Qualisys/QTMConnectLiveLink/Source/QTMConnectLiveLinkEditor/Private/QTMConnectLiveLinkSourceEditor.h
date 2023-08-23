@@ -63,7 +63,14 @@ class QTMCONNECTLIVELINKEDITOR_API SQTMConnectLiveLinkSourceEditor : public SCom
     {
         return IsStreamForce();
     }
-
+    bool GetStreamAnalog() const
+    {
+        return IsStreamAnalog();
+    }
+    bool GetStreamAnalogSingle() const
+    {
+        return IsStreamAnalogSingle();
+    }
     FString GetStreamRate() const
     {
         return *StreamRatesTB->GetSelectedItem();
@@ -84,7 +91,8 @@ private:
     TSharedPtr<SCheckBox> Stream6dCB;
     TSharedPtr<SCheckBox> StreamSkeletonCB;
     TSharedPtr<SCheckBox> StreamForceCB;
-
+    TSharedPtr<SCheckBox> StreamAnalogCB;
+    TSharedPtr<SCheckBox> StreamAnalogSingleCB;
     bool IsStream3d() const
     {
         return Stream3dCB->IsChecked();
@@ -104,7 +112,14 @@ private:
     {
         return StreamForceCB->IsChecked();
     }
-
+    bool IsStreamAnalog() const
+    {
+        return StreamAnalogCB->IsChecked();
+    }
+    bool IsStreamAnalogSingle() const
+    {
+        return StreamAnalogSingleCB->IsChecked();
+    }
     FReply CreateSource() const;
     FQTMConnectLiveLinkSourceEditorPropertiesSelected OnPropertiesSelected;
 };

@@ -21,10 +21,9 @@ void SQTMConnectLiveLinkSourceEditor::Construct(const FArguments& Args)
     [
         SNew(SBox)
         .WidthOverride(300)
-        .HeightOverride(210)
+        .HeightOverride(260)
         [
             SNew(SVerticalBox)
-
             + SVerticalBox::Slot()
             .AutoHeight()
             .Padding(3.0f)
@@ -45,7 +44,6 @@ void SQTMConnectLiveLinkSourceEditor::Construct(const FArguments& Args)
                     .Text(LOCTEXT("DefaultQTMIpAddress", "127.0.0.1"))
                 ]
             ]
-
             + SVerticalBox::Slot()
             .AutoHeight()
             .Padding(3.0f)
@@ -125,7 +123,47 @@ void SQTMConnectLiveLinkSourceEditor::Construct(const FArguments& Args)
                     SAssignNew(StreamForceCB, SCheckBox)
                     .IsChecked(ECheckBoxState::Unchecked)
                 ]
+                ]   
+            + SVerticalBox::Slot()
+            .AutoHeight()
+            .Padding(3.0f)
+            [
+                SNew(SHorizontalBox)
+                + SHorizontalBox::Slot()
+                .HAlign(HAlign_Left)
+                .FillWidth(0.5f)
+                [
+                    SNew(STextBlock)
+                    .Text(LOCTEXT("StreamAnalog", "Stream Analog"))
                 ]
+                + SHorizontalBox::Slot()
+                .HAlign(HAlign_Fill)
+                .FillWidth(0.5f)
+                [
+                    SAssignNew(StreamAnalogCB, SCheckBox)
+                    .IsChecked(ECheckBoxState::Unchecked)
+                ]
+            ] 
+            + SVerticalBox::Slot()
+            .AutoHeight()
+            .Padding(3.0f)
+            [
+                SNew(SHorizontalBox)
+                + SHorizontalBox::Slot()
+                .HAlign(HAlign_Left)
+                .FillWidth(0.5f)
+                [
+                    SNew(STextBlock)
+                    .Text(LOCTEXT("StreamAnalogSingle", "Stream Analog Single"))
+                ]
+                + SHorizontalBox::Slot()
+                .HAlign(HAlign_Fill)
+                .FillWidth(0.5f)
+                [
+                    SAssignNew(StreamAnalogSingleCB, SCheckBox)
+                    .IsChecked(ECheckBoxState::Unchecked)
+                ]
+            ] 
             + SVerticalBox::Slot()
             .AutoHeight()
             .Padding(3.0f)

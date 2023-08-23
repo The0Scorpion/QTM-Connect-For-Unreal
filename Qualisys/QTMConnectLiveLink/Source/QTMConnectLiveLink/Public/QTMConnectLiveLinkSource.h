@@ -24,7 +24,7 @@ class CRTProtocol;
 class QTMCONNECTLIVELINK_API QTMConnectLiveLinkSettings
 {
 public:
-	QTMConnectLiveLinkSettings() : IpAddress("127.0.0.1"), Stream3d(false), Stream6d(true), StreamSkeleton(true), StreamForce(false), StreamRate("All Frames"), FrequencyValue(0)
+	QTMConnectLiveLinkSettings() : IpAddress("127.0.0.1"), Stream3d(false), Stream6d(true), StreamSkeleton(true), StreamForce(false), StreamAnalog(false), StreamAnalogSingle(false), StreamRate("All Frames"), FrequencyValue(0)
 	{
 	}
 
@@ -36,6 +36,8 @@ public:
 	bool Stream6d;
 	bool StreamSkeleton;
     bool StreamForce;
+	bool StreamAnalog; 
+	bool StreamAnalogSingle;
     FString StreamRate;
     unsigned int FrequencyValue;
     static const std::vector<FString> STREAMRATES;
@@ -112,4 +114,5 @@ private:
     std::shared_ptr<CRTProtocol> mRTProtocol;
 
     std::unordered_map<std::uint32_t, FString> mForceIdToName;
+	std::unordered_map<std::uint32_t, FString> mDeviceIdToName;
 };
