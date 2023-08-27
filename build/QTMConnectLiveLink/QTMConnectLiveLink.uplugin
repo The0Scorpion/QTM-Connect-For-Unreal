@@ -1,0 +1,52 @@
+{
+	"FileVersion": 3,
+	"Version": 0,
+	"VersionName": "1.4.0",
+	"FriendlyName": "QTMConnectLiveLink",
+	"Description": "LiveLink Source for receiving Qualisys Track Manager skeleton data",
+	"Category": "Qualisys",
+	"CreatedBy": "Qualisys",
+	"CreatedByURL": "https://www.qualisys.com/",
+	"DocsURL": "https://www.qualisys.com/software/real-time-sdk/",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/f7c205bbe7894bffa2fe2289d8c81643",
+	"SupportURL": "https://www.qualisys.com/support/",
+	"EngineVersion": "4.27.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "QTMConnectLiveLink",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64"
+			],
+			"BlacklistPlatforms": [
+				"Android",
+				"Linux",
+				"Mac",
+				"IOS"
+			]
+		},
+		{
+			"Name": "QTMConnectLiveLinkEditor",
+			"Type": "UncookedOnly",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64"
+			],
+			"BlacklistPlatforms": [
+				"Android",
+				"Linux",
+				"Mac",
+				"IOS"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "LiveLink",
+			"Enabled": true
+		}
+	]
+}
